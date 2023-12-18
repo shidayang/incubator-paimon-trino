@@ -236,7 +236,9 @@ public abstract class TrinoPageSourceBase implements ConnectorPageSource {
             Timestamp timestamp = (org.apache.paimon.data.Timestamp) value;
             type.writeObject(
                     output, fromEpochMillisAndFraction(timestamp.getMillisecond(), 0, UTC_KEY));
-        } else if (javaType == Block.class) {
+        } else if (type instanceof ArrayType
+                || type instanceof MapType
+                || type instanceof RowType) {
             writeBlock(output, type, logicalType, value);
         } else {
             throw new TrinoException(
